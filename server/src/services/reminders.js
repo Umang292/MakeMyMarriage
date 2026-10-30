@@ -1,0 +1,7 @@
+import cron from 'node-cron';import {EmailJob,Invitation,Household,Wedding,RSVP} from '../models.js';import {sendEmail,appUrl} from './email.js';import {unseal} from '../utils/security.js';
+export function startReminderWorker(){cron.schedule('* * * * *',async()=>{try{const jobs=await EmailJob.find({status:'queued',sendAt:{$lte:new Date()}}).limit(15);for(const job of jobs){const lock=await EmailJob.findOneAndUpdate({_id:job.id,status:'queued'},{$set:{status:'sending'}},{new:true});if(!lock)continue;try{const invitation=await Invitation.findById(job.invitation).select('+deliveryCiphertext');if(!invitation||invitation.status!=='active'){job.status='skipped';await job.save();continue;}const household=await Household.findById(invitation.household);if(!household?.email||household.optOut){job.status='skipped';await job.save();continue;}if(job.kind==='rsvp'&&await RSVP.exists({invitation:invitation.id})){job.status='skipped';await job.save();continue;}
+const link=appUrl('/i/'+unseal(invitation.deliveryCiphertext));
+const subject=job.kind==='rsvp'?'A friendly wedding RSVP reminder':'Wedding ceremony reminder';
+const result=await sendEmail({to:household.email,subject,text:`Dear ${household.label}, we look forward to celebrating with you. View your invitation: ${link}`});
+await EmailJob.updateOne({_id:job.id,status:'sending'},{$set:{status:'sent',providerMessageId:result.messageId}});
+}catch(e){await EmailJob.updateOne({_id:job.id},{$set:{status:'failed',error:String(e.message).slice(0,250)}});}}}catch(e){console.error('Reminder worker:',e.message)}});}
