@@ -86,6 +86,8 @@ After building, Express serves `dist/` and `/api` on `http://localhost:4000`. Se
 3. Configure `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`, and `SMTP_FROM` to enable production account verification, password resets, and email reminders. Add `APP_URL` with your production Vercel URL if you use a custom domain. AI features need their matching `AI_*` variables.
 4. Redeploy after saving environment variables.
 
+If `/api/health` returns 503 with `MONGODB_URI is not configured`, verify that the variable name is exactly `MONGODB_URI` and that it is enabled for Production, then redeploy. If the connection still fails, verify the Atlas hostname, database user, and network access settings.
+
 The app's API uses the same Vercel deployment and MongoDB connection. Vercel Functions do not provide durable local file storage or a continuously running worker: photo uploads need a persistent object-storage provider, and scheduled reminder emails need a Vercel Cron route before those features are production-ready.
 
 ## 3. First-use test journey
