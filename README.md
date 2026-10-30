@@ -72,11 +72,11 @@ npm run build
 npm start
 ```
 
-After building, Express serves `public/` and `/api` on `http://localhost:4000`. Set `NODE_ENV=production`, `APP_URL=https://your-domain` and configure HTTPS, MongoDB, image storage, email service and monitoring before real users.
+After building, Express serves `dist/` and `/api` on `http://localhost:4000`. Set `NODE_ENV=production`, `APP_URL=https://your-domain` and configure HTTPS, MongoDB, image storage, email service and monitoring before real users.
 
 ## Deploy to Vercel
 
-The root `index.js` exports the Express application for Vercel, and `npm run build` writes the Vite frontend to `public/` for Vercel's CDN.
+The root `index.js` exports the Express application for Vercel, and `npm run build` writes the Vite frontend to `dist/` for Vercel's CDN.
 
 1. Import `Umang292/MakeMyMarriage` at [vercel.com/new](https://vercel.com/new) and deploy the `main` branch.
 2. In the Vercel project settings, add these environment variables for Production (and Preview if needed):
