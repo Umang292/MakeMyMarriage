@@ -72,7 +72,21 @@ npm run build
 npm start
 ```
 
-After building, Express serves `client/dist` and `/api` on `http://localhost:4000`. Set `NODE_ENV=production`, `APP_URL=https://your-domain` and configure HTTPS, MongoDB, image storage, email service and monitoring before real users.
+After building, Express serves `public/` and `/api` on `http://localhost:4000`. Set `NODE_ENV=production`, `APP_URL=https://your-domain` and configure HTTPS, MongoDB, image storage, email service and monitoring before real users.
+
+## Deploy to Vercel
+
+The root `index.js` exports the Express application for Vercel, and `npm run build` writes the Vite frontend to `public/` for Vercel's CDN.
+
+1. Import `Umang292/MakeMyMarriage` at [vercel.com/new](https://vercel.com/new) and deploy the `main` branch.
+2. In the Vercel project settings, add these environment variables for Production (and Preview if needed):
+   - `MONGODB_URI` — your MongoDB Atlas connection string. Do not commit it or share it in chat.
+   - `JWT_SECRET` — a private random secret of at least 32 characters.
+   - `NODE_ENV` — `production`.
+3. Add `APP_URL` with your production Vercel URL if you use a custom domain. Optional email and AI integrations need their matching `SMTP_*` and `AI_*` variables.
+4. Redeploy after saving environment variables.
+
+The app's API uses the same Vercel deployment and MongoDB connection. Vercel Functions do not provide durable local file storage or a continuously running worker: photo uploads need a persistent object-storage provider, and scheduled reminder emails need a Vercel Cron route before those features are production-ready.
 
 ## 3. First-use test journey
 
