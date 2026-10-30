@@ -1,5 +1,18 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "buildCommand": "npm run build",
-  "outputDirectory": "dist"
+  "outputDirectory": "dist",
+  "rewrites": [
+    { "source": "/app", "destination": "/" },
+    { "source": "/login", "destination": "/" },
+    { "source": "/register", "destination": "/" },
+    { "source": "/forgot-password", "destination": "/" },
+    { "source": "/reset-password", "destination": "/" },
+    { "source": "/verify-email", "destination": "/" },
+    { "source": "/accept-invite/:token", "destination": "/" },
+    { "source": "/weddings/new", "destination": "/" },
+    { "source": "/i/:token", "destination": "/" },
+    { "source": "/w/:id", "destination": "/" },
+    { "source": "/w/:id/:path*", "destination": "/" }
+  ]
 }
