@@ -76,14 +76,14 @@ After building, Express serves `dist/` and `/api` on `http://localhost:4000`. Se
 
 ## Deploy to Vercel
 
-The root `index.js` exports the Express application for Vercel, and `npm run build` writes the Vite frontend to `dist/` for Vercel's CDN.
+`api/[...path].js` exposes the Express application as a Vercel Function, and `npm run build` writes the Vite frontend to `dist/` for Vercel's CDN.
 
 1. Import `Umang292/MakeMyMarriage` at [vercel.com/new](https://vercel.com/new) and deploy the `main` branch.
 2. In the Vercel project settings, add these environment variables for Production (and Preview if needed):
-   - `MONGODB_URI` — your MongoDB Atlas connection string. Do not commit it or share it in chat.
+   - `MONGODB_URI` — a working MongoDB Atlas connection string; make sure your Atlas network access allows connections from Vercel. Do not commit it or share it in chat.
    - `JWT_SECRET` — a private random secret of at least 32 characters.
    - `NODE_ENV` — `production`.
-3. Add `APP_URL` with your production Vercel URL if you use a custom domain. Optional email and AI integrations need their matching `SMTP_*` and `AI_*` variables.
+3. Configure `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`, and `SMTP_FROM` to enable production account verification, password resets, and email reminders. Add `APP_URL` with your production Vercel URL if you use a custom domain. AI features need their matching `AI_*` variables.
 4. Redeploy after saving environment variables.
 
 The app's API uses the same Vercel deployment and MongoDB connection. Vercel Functions do not provide durable local file storage or a continuously running worker: photo uploads need a persistent object-storage provider, and scheduled reminder emails need a Vercel Cron route before those features are production-ready.
