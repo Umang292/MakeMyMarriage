@@ -1,7 +1,7 @@
 import express from 'express';import cookieParser from 'cookie-parser';import cors from 'cors';import helmet from 'helmet';import rateLimit from 'express-rate-limit';import mongoose from 'mongoose';import mongoSanitize from 'express-mongo-sanitize';import path from 'node:path';import fs from 'node:fs';
 import authRoutes from './routes/auth.js';import weddingRoutes from './routes/weddings.js';import invitationRoutes from './routes/invitations.js';import guestRoutes from './routes/guest.js';import photoRoutes from './routes/photos.js';import aiRoutes from './routes/ai.js';
 import {connectToDatabase} from './database.js';
-const app=express();app.disable('x-powered-by');app.use(helmet({contentSecurityPolicy:false}));
+const app=express();app.disable('x-powered-by');if(process.env.VERCEL==='1')app.set('trust proxy',1);app.use(helmet({contentSecurityPolicy:false}));
 const configuredOrigins=[process.env.APP_URL,process.env.VERCEL_URL&&`https://${process.env.VERCEL_URL}`,process.env.VERCEL_PROJECT_PRODUCTION_URL&&`https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`].filter(Boolean).map(origin=>new URL(origin).origin);
 const allowedOrigin=(origin,host)=>{try{const parsed=new URL(origin);return configuredOrigins.includes(parsed.origin)||parsed.host===host;}catch{return false;}};
 app.use((req,res,next)=>cors({origin:(origin,callback)=>callback(null,!!origin&&allowedOrigin(origin,req.get('host'))),credentials:true})(req,res,next));
